@@ -19,6 +19,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 gcc-arm-none-eabi wine wine32 wine64 libnss-unknown fuse file \
     ninja-build nasm flex bison wget ca-certificates git clangd libpng-dev libpng-tools
 
+# The DS compiler (metroskrew) is a 32-bit x86 program. On other CPUs (like
+# ARM64) it runs through qemu. The host kernel must also have qemu binfmt
+# set up (e.g. the qemu-user-binfmt package), and it looks for qemu here.
+RUN if [ "$(dpkg --print-architecture)" != "amd64" ]; then \
+        apt-get install -y --no-install-recommends qemu-user ;\
+    fi
+
 # Install DevkitPro
 RUN if [ "$USE_DEVKITPRO" = "1" ]; then \
         wget --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0" \
