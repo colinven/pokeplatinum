@@ -91,7 +91,8 @@ cmake-build-*
 *.dSYM
 
 # LinuxDeploy
-tools/linuxdeploy/linuxdeploy-x86_64.AppImage
+tools/linuxdeploy/linuxdeploy-*.AppImage
+tools/linuxdeploy/linuxdeploy-*.AppImage.part
 
 # MacOS garbage
 .DS_Store

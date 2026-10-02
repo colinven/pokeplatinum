@@ -20,6 +20,7 @@ meson.build text eol=lf
 *.yml text eol=lf
 *.ini text eol=lf
 *.csv text eol=lf
+*.desktop text eol=lf
 
 *.txt text eol=lf
 # These files must use CRLF to match in the ROM

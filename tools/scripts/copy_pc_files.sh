@@ -27,16 +27,24 @@ else
     cp -u /ucrt64/bin/libgcc_s_seh-1.dll $OUTPUTDIR/libgcc_s_seh-1.dll
     cp -u /ucrt64/bin/libstdc++-6.dll $OUTPUTDIR/libstdc++-6.dll
   else
+    # Start from an empty AppDir. linuxdeploy does not overwrite files that
+    # are already there, so old files from a previous build would stick around.
+    rm -rf $OUTPUTDIR/$3.AppDir
     mkdir -p $OUTPUTDIR/$3.AppDir
     mkdir -p $OUTPUTDIR/$3.AppDir/usr/bin
     mkdir -p $OUTPUTDIR/$3.AppDir/usr/lib
     cp $BUILDDIR/main $OUTPUTDIR/$3.AppDir/usr/bin/app
-    if [ ! -f $BUILDDIR/../tools/linuxdeploy/linuxdeploy-x86_64.AppImage ]; then
+    # Use the linuxdeploy build that matches this machine (x86_64 or aarch64)
+    ARCH=$(uname -m)
+    LINUXDEPLOY=$BUILDDIR/../tools/linuxdeploy/linuxdeploy-$ARCH.AppImage
+    if [ ! -f $LINUXDEPLOY ]; then
       echo "Downloading linuxdeploy..."
-      wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O $BUILDDIR/../tools/linuxdeploy/linuxdeploy-x86_64.AppImage
-      chmod +x $BUILDDIR/../tools/linuxdeploy/linuxdeploy-x86_64.AppImage
+      # Download to a temp file first, so a half-written file is never run
+      wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$ARCH.AppImage -O $LINUXDEPLOY.part || exit 1
+      chmod +x $LINUXDEPLOY.part
+      mv $LINUXDEPLOY.part $LINUXDEPLOY
     fi
-    $BUILDDIR/../tools/linuxdeploy/linuxdeploy-x86_64.AppImage --appdir $OUTPUTDIR/$3.AppDir --executable=$OUTPUTDIR/main --desktop-file=$BUILDDIR/../tools/linuxdeploy/App.desktop --icon-file=$BUILDDIR/../tools/linuxdeploy/app.png --output appimage
-    mv $BUILDDIR/pokeplatinum-x86_64.AppImage $OUTPUTDIR/pokeplatinum.AppImage
+    $LINUXDEPLOY --appdir $OUTPUTDIR/$3.AppDir --executable=$OUTPUTDIR/main --desktop-file=$BUILDDIR/../tools/linuxdeploy/App.desktop --icon-file=$BUILDDIR/../tools/linuxdeploy/app.png --output appimage || exit 1
+    mv $BUILDDIR/pokeplatinum-$ARCH.AppImage $OUTPUTDIR/pokeplatinum.AppImage
   fi
 fi

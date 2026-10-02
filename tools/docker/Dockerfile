@@ -35,7 +35,7 @@ RUN if [ "$USE_DEVKITPRO" = "1" ]; then \
     fi
 
 RUN if [ "$USE_DEVKITPRO" = "1" ]; then \
-        ln -s /proc/mounts /etc/mtab ;\
+        ln -sf /proc/mounts /etc/mtab ;\
     fi
 RUN if [ "$USE_DEVKITPRO" = "1" ]; then \
         dkp-pacman -S switch-dev switch-sdl2 switch-glad switch-enet --noconfirm ;\

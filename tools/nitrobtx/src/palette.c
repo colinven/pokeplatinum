@@ -138,7 +138,7 @@ static bool ParseJASCPALColor(char lineBuf[16], struct RGBA8Color *dest)
 static int ReadLine(FILE *fp, char lineBuf[16])
 {
     int length = 0;
-    char c;
+    int c;
 
     while (true) {
         c = fgetc(fp);

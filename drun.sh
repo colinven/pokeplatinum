@@ -32,10 +32,10 @@ if [ "$(docker images -q $IMAGENAME)" == "" ]
 then
     echo "Building container image $IMAGENAME"
     if [ -z "${GITHUB_ACTIONS}" ]; then
-        docker build -t $IMAGENAME -f $DOCKERFILENAME .
+        docker build -t $IMAGENAME -f $DOCKERFILENAME . || exit 1
     else
         # DevkitPro does not install in GitHub actions
-        docker build -t $IMAGENAME -f $DOCKERFILENAME --build-arg USE_DEVKITPRO=0 .
+        docker build -t $IMAGENAME -f $DOCKERFILENAME --build-arg USE_DEVKITPRO=0 . || exit 1
     fi
 fi
 
