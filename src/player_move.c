@@ -1017,6 +1017,24 @@ static void PlayerAvatar_SetMovement_Moving(PlayerAvatar *playerAvatar, MapObjec
     }
 }
 
+#ifdef SDK_PORT
+/**
+ * Get the movement action for walking (not running) on foot, based on the
+ * PlayerWalkSpeed setting. Uses the game's own in-between walk speeds.
+ */
+static enum MovementAction PlayerAvatar_GetConfiguredWalkAction(void)
+{
+    switch (SIM_Config_prj_GetConfig()->playerWalkSpeed) {
+    case SIM_PLAYER_WALK_SPEED_1_14X:
+        return MOVEMENT_ACTION_WALK_EVER_SO_SLIGHTLY_FAST_NORTH;
+    case SIM_PLAYER_WALK_SPEED_1_33X:
+        return MOVEMENT_ACTION_WALK_SLIGHTLY_FAST_NORTH;
+    default:
+        return MOVEMENT_ACTION_WALK_NORMAL_NORTH;
+    }
+}
+#endif
+
 /**
  * Set movement function for the moving state while walking, running, or surfing in the overworld.
  */
@@ -1044,7 +1062,11 @@ static void PlayerAvatar_SetMovement_NormalOverworld(PlayerAvatar *playerAvatar,
 
             MapObject_Turn(mapObj, dir);
         } else {
+            #ifdef SDK_PORT
+            movementAction = PlayerAvatar_GetConfiguredWalkAction();
+            #else
             movementAction = MOVEMENT_ACTION_WALK_NORMAL_NORTH;
+            #endif
             speed = PLAYER_ACTION_SPEED_NORMAL;
 
             PlayerData *playerData = PlayerAvatar_PlayerData(playerAvatar);

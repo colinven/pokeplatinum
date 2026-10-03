@@ -1,4 +1,5 @@
 #include <nitro.h>
+#include <stdlib.h>
 #include <simulator/config/ini.h>
 
 #include "port/sim_config_prj.h"
@@ -46,6 +47,13 @@ static int IniHandler(void* user, const char* section, const char* name,
         config->runFromTrainerBattles = StringToBool(value);
     }
 
+    if(MATCH("Cheats", "PlayerWalkSpeed")) {
+        int speed = atoi(value);
+        if(speed >= 0 && speed < SIM_PLAYER_WALK_SPEED_COUNT) {
+            config->playerWalkSpeed = speed;
+        }
+    }
+
     // ini_parse expects a non-zero return value for success
     return 1;
 }
@@ -84,6 +92,7 @@ void SIM_Config_prj_LoadDefaults(SIM_Config_prj_type * aConfig)
   aConfig->walkThroughWalls = FALSE;
   aConfig->disableRandomEncounters = FALSE;
   aConfig->runFromTrainerBattles = FALSE;
+  aConfig->playerWalkSpeed = SIM_PLAYER_WALK_SPEED_NORMAL;
 }
 
 // Loads the configuration file. If it does not exist, return false
@@ -108,6 +117,7 @@ void SIM_Config_prj_SaveConfigFile(SIM_Config_prj_type * aConfig)
     fprintf(configFile, "WalkThroughWalls=%s\n", BoolToString(aConfig->walkThroughWalls));
     fprintf(configFile, "DisableRandomEncounters=%s\n", BoolToString(aConfig->disableRandomEncounters));
     fprintf(configFile, "RunFromTrainerBattles=%s\n", BoolToString(aConfig->runFromTrainerBattles));
+    fprintf(configFile, "PlayerWalkSpeed=%d\n", aConfig->playerWalkSpeed);
 
     fclose(configFile);
 }
