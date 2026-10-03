@@ -81,6 +81,9 @@ typedef struct WalkUnevenMovementData {
     u16 unused;
     s16 duration;
     s16 timer;
+#ifdef SDK_PORT
+    s16 framesPerStep; // How many frames each step size is spread over (2 at 60fps)
+#endif
 } WalkUnevenMovementData;
 
 typedef struct UnkStruct_02066824 {
@@ -1259,6 +1262,17 @@ static void MovementAction_InitWalkUneven(MapObject *mapObj, int dir, s16 durati
     data->unused = param3;
     data->duration = duration;
 
+    #ifdef SDK_PORT
+    // At 60fps, spread each step size over two frames so the walk takes as
+    // long as it does at 30fps. Same idea as the fix in MovementAction_InitWalk.
+    SIM_Config_prj_type * myConfig = SIM_Config_prj_GetConfig();
+    data->framesPerStep = 1;
+    if(myConfig->enable60fps && myConfig->enable60fpsSpeedFix) {
+        data->framesPerStep = 2;
+    }
+    data->duration = duration * data->framesPerStep;
+    #endif
+
     MapObject_StepDir(mapObj, dir);
     MapObject_TryFaceAndTurn(mapObj, dir);
     sub_02062A0C(mapObj, param3);
@@ -1270,7 +1284,18 @@ static BOOL MovementAction_WalkUneven(MapObject *mapObj, const fx32 *stepSizes)
 {
     WalkUnevenMovementData *data = MapObject_GetMovementData(mapObj);
 
+    #ifdef SDK_PORT
+    // Split the step size evenly over framesPerStep frames. The last frame
+    // also gets any remainder, so the object still lands exactly on the tile.
+    fx32 stepSize = stepSizes[data->timer / data->framesPerStep];
+    fx32 part = stepSize / data->framesPerStep;
+    if(data->timer % data->framesPerStep == data->framesPerStep - 1) {
+        part = stepSize - part * (data->framesPerStep - 1);
+    }
+    MapObject_MovePosInDir(mapObj, data->dir, part);
+    #else
     MapObject_MovePosInDir(mapObj, data->dir, stepSizes[data->timer]);
+    #endif
     MapObject_RecalculateObjectHeight(mapObj);
 
     if (++(data->timer) < data->duration) {
