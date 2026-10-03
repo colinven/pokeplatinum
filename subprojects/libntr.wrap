@@ -1,6 +1,6 @@
 [wrap-git]
 url = https://github.com/colinven/libntr.git
-revision = fix/appimage-working-dir
+revision = perf/texture-cache
 depth = 1
 directory = libntr
 
