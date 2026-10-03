@@ -29,6 +29,9 @@ static int IniHandler(void* user, const char* section, const char* name,
     if(MATCH("General", "EnableAsserts")) {
         config->enableAsserts = StringToBool(value);
     }
+    if(MATCH("General", "BreakDebuggerOnAssert")) {
+        config->breakDebuggerOnGfAssert = StringToBool(value);
+    }
 
     // Cheats section
     if(MATCH("Cheats", "WalkThroughWalls")) {
@@ -42,6 +45,9 @@ static int IniHandler(void* user, const char* section, const char* name,
     if(MATCH("Cheats", "RunFromTrainerBattles")) {
         config->runFromTrainerBattles = StringToBool(value);
     }
+
+    // ini_parse expects a non-zero return value for success
+    return 1;
 }
 
 static const char * BoolToString(BOOL arg)
@@ -76,6 +82,8 @@ void SIM_Config_prj_LoadDefaults(SIM_Config_prj_type * aConfig)
 
   // Cheats section
   aConfig->walkThroughWalls = FALSE;
+  aConfig->disableRandomEncounters = FALSE;
+  aConfig->runFromTrainerBattles = FALSE;
 }
 
 // Loads the configuration file. If it does not exist, return false
