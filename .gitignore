@@ -140,3 +140,6 @@ compile_commands.json
 # Cheat files
 *.dct
 *.mch
+
+# Machine-specific notes for Claude Code
+CLAUDE.local.md
