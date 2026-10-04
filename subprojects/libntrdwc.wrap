@@ -1,6 +1,6 @@
 [wrap-git]
 url = https://github.com/colinven/libntrdwc.git
-revision = fix/missing-firmware-bin
+revision = colin/main
 depth = 1
 directory = libntrdwc
 
