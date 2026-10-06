@@ -40,10 +40,7 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build_linux/pokeplatinum/main",
-            "cwd": "${workspaceFolder}/build_linux/pokeplatinum",
-            "initCommands": [
-                "settings set target.source-map /repo ${workspaceRoot}"
-            ]
+            "cwd": "${workspaceFolder}/build_linux/pokeplatinum"
         },
     ]
 }
