@@ -126,7 +126,7 @@ struct CustomBgScrollContext {
     BufferManager *bufferManager;
     u32 buffer1[HW_LCD_HEIGHT];
     u32 buffer2[HW_LCD_HEIGHT];
-    u32 offsetReg;
+    uPtr offsetReg;
 };
 
 typedef struct BgScrollContext {
@@ -209,7 +209,7 @@ BOOL Afterimage_Update(AfterimageContext *ctx);
 void RevolutionContext_InitOvalRevolutions(XYTransformContext *ctx, int revs, int stepsPerRev);
 void AlphaFadeContext_Init(AlphaFadeContext *ctx, s16 startEv1, s16 endEv1, s16 startEv2, s16 endEv2, int steps);
 BOOL AlphaFadeContext_IsDone(const AlphaFadeContext *ctx);
-CustomBgScrollContext *CustomBgScrollContext_New(u32 offsetReg, u32 initValue, enum HeapID heapID);
+CustomBgScrollContext *CustomBgScrollContext_New(uPtr offsetReg, u32 initValue, enum HeapID heapID);
 void CustomBgScrollContext_Free(CustomBgScrollContext *ctx);
 void *CustomBgScrollContext_GetWriteBuffer(const CustomBgScrollContext *ctx);
 void CustomBgScrollContext_Stop(CustomBgScrollContext *ctx);
