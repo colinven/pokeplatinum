@@ -1200,6 +1200,11 @@ static void ov5_021D6868(UnkStruct_ov5_021D6594 *param0, int param1, u32 param2)
     UnkStruct_ov5_021D69B8 *v0 = param0->unk_00 + param1;
 
     if (v0->unk_10 == 3) {
+        #ifndef SDK_BUILD_ARM
+        if(!v0->unk_08) {
+            return;
+        }
+        #endif
         v0->unk_08->unk_BA6 = 5;
         v0->unk_08->unk_BA4 = param2;
     }
