@@ -1268,6 +1268,16 @@ static void ov5_021D68B8(UnkStruct_ov5_021D6594 *param0, int param1)
         v0->unk_08 = NULL;
     }
 
+#ifdef SDK_PORT
+    // This table is a global that lives for the whole run. On the DS, overlay 5 is
+    // reloaded from the ROM each time the field starts, which resets it. Here it is
+    // not, so reset the entry by hand. Otherwise a freed weather can still say it
+    // is running, and the next fade out writes through a NULL pointer.
+    v0->unk_10 = 0;
+    v0->unk_12 = 0;
+    v0->unk_14 = NULL;
+#endif
+
     FogManager_ApplyParameters(param0->fieldSystem->fogMan, FOG_PARAMETER_ENABLED, FALSE, GX_FOGBLEND_COLOR_ALPHA, GX_FOGSLOPE_0x8000, 0);
 }
 
