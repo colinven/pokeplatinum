@@ -41,6 +41,8 @@ fi
 
 mkdir -p ./.fontconfig_cache
 
+CWD=$(pwd)
+
 # Start an interactive shell
 if [ $INTERACTIVE -eq 1 ]; then
 docker run -it --user $(id -u):$(id -g) \
@@ -51,7 +53,7 @@ docker run -it --user $(id -u):$(id -g) \
            --privileged \
            --device /dev/fuse \
            --cap-add SYS_ADMIN \
-           --mount type=bind,src=./,target=/repo \
+           --mount type=bind,src=./,target=$CWD \
            $IMAGENAME
 exit 0
 fi
@@ -66,6 +68,6 @@ docker run --user $(id -u):$(id -g) \
            --device /dev/fuse \
            --cap-add SYS_ADMIN \
            -i \
-           --mount type=bind,src=./,target=/repo \
-           $IMAGENAME sh -c "cd /repo && $COMMAND"
+           --mount type=bind,src=./,target=$CWD \
+           $IMAGENAME sh -c "cd $CWD && $COMMAND"
 

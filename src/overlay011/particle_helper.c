@@ -27,7 +27,11 @@ ParticleSystem *ParticleHelper_CreateParticleSystem(enum HeapID heapID)
 
 ParticleSystem *ov11_0221F888(enum HeapID heapID)
 {
+    #ifdef SDK_BUILD_ARM
     void *heap = Heap_Alloc(heapID, 0x4200);
+    #else
+    void *heap = Heap_Alloc(heapID, 0x4200*2);
+    #endif
     if (heap == NULL) {
         return NULL;
     }
