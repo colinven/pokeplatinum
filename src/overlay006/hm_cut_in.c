@@ -1397,6 +1397,14 @@ static BOOL CutIn_InitSpritesFly(HMCutIn *cutIn)
 
 static BOOL HMCutIn_UnloadMonSprite(HMCutIn *cutIn)
 {
+#ifdef SDK_PORT
+    // The original frees the Pokemon's sprite data here but keeps drawing its
+    // (now off-screen) sprite until the cut-in ends. On DS the freed memory
+    // still holds the old data; on PC it does not, so the game crashes.
+    // Delete the sprite first so nothing reads the freed data.
+    Sprite_Delete(cutIn->pokemonSprite);
+    cutIn->pokemonSprite = NULL;
+#endif
     CutIn_UnloadPokemonSpriteResources(cutIn);
     cutIn->state++;
     return FALSE;
