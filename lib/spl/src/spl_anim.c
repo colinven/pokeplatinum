@@ -102,7 +102,7 @@ void SPLAnim_Alpha(SPLParticle *ptcl, SPLResource *res, int lifeRate)
         value = alphaAnim->alpha.mid;
     } else {
         #ifdef SDK_PORT
-        if(out != 0) {
+        if(out != 255) {
             value = ((lifeRate - 255) * (alphaAnim->alpha.end - alphaAnim->alpha.mid)) / (255 - out);
         } else {
             value = 0;
